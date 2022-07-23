@@ -1,0 +1,169 @@
+[2.1 Our First Styled Component]
+1) npm i로 styled component 설치
+2) react에서 import 하기
+3) 변수 만들기 
+ex) const Father = styled.div`
+  display: flex;
+`;
+(styled 뒤에는 엘리먼트, 백틱 사용하기)
+점 찍고 우리가 사용하기 원하는 태그 적기. (유효한 html 태그여야 한다. h1, span처럼.
+두 개의 백틱 사이에 들어가는 건 CSS이다. 일반적인 CSS 코드)
+4) 태그 형태로 return시키기.
+ex) <Father></Father>
+
+*styled component를 썼을 때 장점
+- 쓰임을 직접 확인해야하는 div박스를 사용할 필요가 없다.
+- style을 직접 먹이거나, className을 사용할 필요가 없다.
+
+
+[2.2 Adapting and Extending]
+* 값이 비슷하거나 겹치는, 거의 똑같은 컴포넌트들을 어떻게 처리하면 좋을까?
+
+-> props를 설정하고 컴포넌트로 보낸다.
+예시) 
+background-color: ${(props) => props.bgColor}
+
+* 컴포넌트는 어떻게 확장할 수 있을까?
+확장이란 ? 기존에 가지고 있던 속성에다가 다른 속성을 추가하는 것.
+한 컴포넌트가 가진 모든 속성을 가지고 와서, 특정 속성만 하나 추가하는 방법 
+const Circle = styled(Box)``
+styled뒤 괄호에다가 속성 가져오고자 하는 컴포넌트 이름을 입력한다.
+
+[2.3 'As' and Attrs]
+컴포넌트의 태그는 바꾸고 싶지만, 스타일은 바꾸고 싶지 않을 때 어떻게 해야 할까? 
+
+우리가 가진 컴포넌트를 바꾸기.
+방법 : as를 attr로 사용한다.
+
+ex) Father은 div인데 모종의 이유로 Header로 사용할 수 있다.
+그럴 땐 as="header"을 붙여주면 된다.
+
+attr를 styled components를 통해 붙이는 방법? 
+태그 뒤 .찍고 attrs({속성값}) 넣어준다.
+
+const Input = styled.input.attrs({required: true})`
+  background-color: tomato;
+`
+
+[2.4 Animations and Pseudo Selectors]
+styled components로 애니메이션 적용하는 방법
+1) { keyframe } import 하기
+2) 변수명 지정 후 = keyframes
+뒤에는 다른 컴포넌트들처럼 백틱을 붙여준다.
+백틱 안에는 애니메이션 내용 담기
+3) 애니메이션 적용하고자 하는 컴포넌트에다가 animation 속성 추가 후 ${}안에 애니메이션 이름 넣어줌(방금 만든 거) 그 뒤에 초, 무한 속성 등 정할 수 있음.
+${}의 이름은 string interpolation 이라고 한다 ...^^;;
+
+컴포넌트 안의 요소 선택하는법
+const Box = styled.div`
+  height: 200px;
+  width: 200px;
+  background-color: tomato;
+  animation:${rotateAnimation} 1s linear infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    
+  }
+`
+이 예시처럼 때려박아버리면 된다...^^..
+컴포넌트 스타일 안에는 target element의 속성까지도 지정해 준다.
+한 컴포넌트만 스타일 처리해주고, 나머지는 target으로 처리하는 것도 방법이다.
+
+hover나 active같은 속성 쓰는 법 (수도 셀렉터)
+    스팬 안에다 쓰기 -> &:hover, 밖에다 쓰기 -> span:hover. 여기서 &는 span의 줄임말버전이라고도 할 수 있다.
+
+
+[2.5 Pseudo Selectors part Two]
+태그에 구애받지 않고 styled component 자체를 타겟팅 하는 법
+(어떤 컴포넌트 안에 있는 스타일 컴포넌트)
+스타일 컴포넌트 선언한 다음, 특정 컴포넌트 안에서
+${컴포넌트 이름} {
+
+}이런 식으로 CSS를 넣어준다.
+그러면 나중에 해당 컴포넌트의 속성이 as를 통해 바뀌어도 똑같이 동작한다.
+
+[2.6 super recap]
+- css주기! styled components import 한 후, 
+변수 선언한 다음 styled.html태그(p, a, h1, h2), 백틱!
+그리고 백틱 안에는 보통의 css 코드를 넣어준다. 
+
+- styled component를 이용해 html요소가 무엇을 뜻하는지 명시적으로 나타낼 수 있다(ex. column1)
+
+- props이용해서 속성 지정하기
+props를 인자를 받아서 컴포넌트에 전달해 줄 함수를 만들어 주자.
+ex) background-color: ${(props)=>props.bgColor};
+태그에다가는 bgColor라는 props 추가해주면 됨.
+
+- 컴포넌트 확장하기
+const 변수명 = styled(box)``
+{
+    이 안에 추가하고자 하는 속성 입력해주기
+}
+
+-html 태그 자체를 바꾸기
+as를 이용한다.
+ex) <Btn as="a"></Btn>
+
+- html attribute 추가하기
+모든 요소가 같은 attribute 가져야 할 때 유용하다.
+styled.input.attr({})``
+이런 식으로.뒤에 attr({}) 붙여준다.
+styled.input.attr({ required:ture, maxLength:10 })``
+
+- 애니메이션
+animation 받을 element 만들어주고, 그 안에 css로 애니메이션 설정.
+from {} to {}
+0% {} 50% {} 100%{}
+
+그 뒤에 애니메이션 적용할 요소 안에다가
+animation: ${위에 만든 애니메이션 요소 이름} 1s linear infinte;
+이런식으로 적용해준다.
+
+- 수도 셀렉터
+styled component 안에 있는 요소를 선택하는 방법
+
+styled component 안에 있는데 styled component가 아닌 것도 선택하게 해준다. 
+컴포넌트 안에서 해당 태그를 직접 언급해주면 된다.
+ex)
+const Princess = styled.div`
+    h1{
+        background-color:tomato;
+    }
+`
+- state 셀럭터
+hover, active 등
+
+h1:hover (밖에다가)
+&:hover (안에다가)
+니꼬 추천으로는 안에 넣어주는게 더 좋다고 함.
+
+- 스타일 컴포넌트 안의 또다른 스타일 컴포넌트를 선택하기 
+스타일 컴포넌트를 ${컴포넌트 이름}{
+    으로 컴포넌트 안에서 직접 언급해준다.
+이 기능은 태그에 의존하기 싫을 때, 어떤 태그라도 동작하게 하고 싶을 때 유용하게 사용된다.
+이렇게 지정된 컴포넌트는, 지정된 컴포넌트 밖에 있을 때는 조건이 적용되지 않는다.
+
+
+[2.7 themes]
+theme: 모든 색상을 가지고 있는 object
+모든 색깔을 하나의 object에 넣기 때문에 매우 유용하다.
+컴포넌트의 색깔을 일일이 바꾸는게 아니다!
+
+theme실행 : 
+1) index.js로 간다.
+2) ThemeProvider를 Import 해준다.
+3) <App/>을 ThemeProvider로 감싼다.
+4) ThemeProvider는 하나의 props를 가진다. theme!
+5) theme을 const로 지정해준 후 ThemeProvider안에 있는 theme props에 넣는다.
+6) 사용하고자 하는 곳에서 props를 이용한 함수 넣어준다.
+ex) color: ${props -> props.theme.textColor}
+
+ThemeProvider 안에 있는 모든 component는 (App 안에 있는) 모두 theme에 접근이 가능하다.
+
+2가지 이상의 theme을 가지고, 같은 property를 가져야 하는 이유 : switch해야 하기 때문이다.
+
+딱 하나만 변화시켜도 (theme이라는 props만) 모든 걸 바꿀 수 있따!
+
+기억하기 : dark/light 모드를 가지고 싶다면, property들의 이름이 똑같아야 한다.
